@@ -3,6 +3,7 @@ set fish_greeting ""
 set -x EDITOR nvim
 set -x GOPATH ~/.go
 set -x DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
+# set -x MANPAGER nvim +Man!
 
 bind -M insert alt-m accept-autosuggestion
 
@@ -43,5 +44,9 @@ if status is-interactive
     alias gr='go run .'
     alias uuid="python3 -c 'import uuid; print(uuid.uuid4())'"
     alias p='podman'
+    alias pd='podman-compose'
+    alias docker='podman'
     alias ducktwerk='duckdb'
+    alias ragebait='/home/veya/mini-moulinette/mini-moul.sh'
+    alias oarsch='norminette'
 end

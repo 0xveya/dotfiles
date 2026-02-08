@@ -129,3 +129,7 @@ alias nwt="cp -r ~/obsidianschule/latex/template/nwt/* ."
 if [ -e /home/veya/.nix-profile/etc/profile.d/nix.sh ]; then . /home/veya/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 . ~/.gns3util-complete.zsh
 export PATH="$HOME/.local/bin:$PATH"
+
+if [ -f "$HOME/.local/share/dnvm/env" ]; then
+    . "$HOME/.local/share/dnvm/env"
+fi
