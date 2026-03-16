@@ -1,27 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Requires: grim, slurp, wl-copy
-# Always region; clipboard only
-
+# Requires: grim, slurp, wl-copy, wayfreeze
 TMP_PNG="$(mktemp --suffix=.png)"
-cleanup() { rm -f "$TMP_PNG"; }
+cleanup() { killall wayfreeze 2>/dev/null || true; rm -f "$TMP_PNG"; }
 trap cleanup EXIT
 
-# Select region (slurp draws the overlay and effectively freezes view during selection)
+# Freeze the screen first
+wayfreeze --hide-cursor &
+FREEZE_PID=$!
+sleep 0.1  # wait for freeze to activate
+
+# Now select and capture
 GEOM="$(slurp)" || {
   echo "Selection canceled." >&2
+  kill $FREEZE_PID 2>/dev/null || true
   exit 1
 }
 
-# Capture the selected region
-grim -g "$GEOM" "$TMP_PNG" >/dev/null 2>&1
+grim -g "$GEOM" "$TMP_PNG"
+kill $FREEZE_PID
 
-# Ensure file has data
-if [[ ! -s "$TMP_PNG" ]]; then
-  echo "grim produced an empty image file." >&2
-  exit 1
-fi
-
-# Copy to clipboard as PNG
-wl-copy --type image/png <"$TMP_PNG"
+[[ -s "$TMP_PNG" ]] && wl-copy --type image/png <"$TMP_PNG"

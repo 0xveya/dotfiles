@@ -3,6 +3,7 @@ set fish_greeting ""
 set -x EDITOR nvim
 set -x GOPATH ~/.go
 set -x DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
+set -gx INFISICAL_API_URL "https://secrets.saygex.xyz"
 # set -x MANPAGER nvim +Man!
 
 bind -M insert alt-m accept-autosuggestion
@@ -14,6 +15,7 @@ if status is-interactive
     zoxide init --cmd cd fish | source
     starship init fish | source
     atuin init fish --disable-up-arrow | source
+    mise activate fish | source
 
     abbr ip 'ip -c'
     alias owo='sudo'
@@ -49,4 +51,17 @@ if status is-interactive
     alias ducktwerk='duckdb'
     alias ragebait='/home/veya/mini-moulinette/mini-moul.sh'
     alias oarsch='norminette'
+end
+set -gx PATH /home/veya/.local/funcheck/host $PATH
+
+alias gbuild="mise run build-cli && grefresh"
+abbr -a gdev "./dist/gns3util"
+
+function grefresh
+    if test -f ./dist/gns3util
+        ./dist/gns3util _carapace fish | source
+        echo "Completions refreshed from ./dist/gns3util"
+    else
+        echo "Error: ./dist/gns3util not found. Run 'mise run build-cli' first."
+    end
 end
