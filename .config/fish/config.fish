@@ -9,13 +9,18 @@ set -gx INFISICAL_API_URL "https://secrets.saygex.xyz"
 bind -M insert alt-m accept-autosuggestion
 
 if status is-interactive
+    mise activate fish | source
+else
+    mise activate fish --shims | source
+end
+
+if status is-interactive
 
     fish_vi_key_bindings
 
     zoxide init --cmd cd fish | source
     starship init fish | source
     atuin init fish --disable-up-arrow | source
-    mise activate fish | source
 
     abbr ip 'ip -c'
     alias owo='sudo'
