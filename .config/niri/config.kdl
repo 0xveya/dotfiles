@@ -27,9 +27,10 @@ input {
 //     position x=0 y=0
 // }
 
-// output "eDP-1" {
-//     on
-// }
+output "eDP-1" {
+    mode "2560x1600"
+    scale 2.4
+}
 
 
 workspace "1"
@@ -86,8 +87,13 @@ layout {
 
 spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "cursor-theme" "BreezeX-RosePine-Linux"
 spawn-at-startup "awww-daemon"
+spawn-at-startup "dunst"
 layer-rule {
     match namespace="^awww-daemon$"
+    place-within-backdrop true
+}
+layer-rule {
+    match namespace="^swaync$"
     place-within-backdrop true
 }
 spawn-at-startup "/home/veya/github/niri-wallpaper/build/niri-wallpaper" "/home/veya/wallpapers/gleep" "-i" "3600" "-o" "eDP-1"
@@ -173,7 +179,7 @@ binds {
     Mod+Shift+S { spawn "/home/veya/.config/hypr/screenshot_take.sh"; }
     Mod+Shift+H { spawn "/home/veya/.config/hypr/screenshot_edit.sh"; }
 
-    Mod+Shift+N { spawn "swaync-client" "-t" "-sw"; }
+    Mod+Shift+N { spawn "~/.local/bin/toggle-dunst"; }
 
     Mod+Shift+X { spawn "hyprlock"; }
 

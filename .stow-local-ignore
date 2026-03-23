@@ -12,6 +12,7 @@ _darcs
 \.hg
 \.nix
 \.git
+\.jj
 \.gitignore
 \.gitmodules
 

@@ -49,6 +49,7 @@ if status is-interactive
     alias k='kubectl'
     alias g='gns3util'
     alias gr='go run .'
+    alias zr='zig build run'
     alias uuid="python3 -c 'import uuid; print(uuid.uuid4())'"
     alias p='podman'
     alias pd='podman-compose'
