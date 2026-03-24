@@ -1,0 +1,6 @@
+[settings]
+experimental = true
+
+[tools]
+television = "latest"
+yq = "latest"
