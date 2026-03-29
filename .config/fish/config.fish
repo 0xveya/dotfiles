@@ -36,7 +36,7 @@ if status is-interactive
     alias ff='hyfetch'
     alias :3='hyfetch'
     alias putty='sudo cu -l /dev/ttyUSB0 -s 9600'
-    alias ls='eza'
+    alias ls='eza --icons'
     alias t='bash -c "~/dotfiles/.config/tmux/tmux_startup.sh"'
     alias ga='git add'
     alias glog='git log'

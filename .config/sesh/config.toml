@@ -3,13 +3,10 @@ startup_command = "nvim"
 
 [[session]]
 path = "~/coding/gns3util"
-name = "gns3"
+name = "gns3test"
 startup_command = '''
-# Window 1: nvim on top, terminal on bottom
 tmux send-keys "nvim ." C-m
 tmux split-window -v -c "~/coding/gns3util"
-
-# Windows 2-9: Spread across all your different repo folders
 tmux new-window -c "~/coding/gns3util"
 tmux new-window -c "~/coding/gns3util_ermgamba"
 tmux new-window -c "~/github/gns3-review/main_repo_mit_prs/gns3-api-util"
@@ -18,8 +15,6 @@ tmux new-window -c "~/github/bucket"
 tmux new-window -c "~/github/homebrew-tap"
 tmux new-window -c "~/github/gns3util"
 tmux new-window -c "~/coding/temp/temp2/temp3/temp4/gns3-api-util"
-
-# Jump back to Window 1 to start coding
 tmux select-window -t 1
 '''
 
@@ -41,7 +36,6 @@ startup_command = '''
 tmux send-keys "nvim ." C-m
 tmux new-window -c "~/coding/privacyViolation"
 
-# Window 2 has a split!
 tmux split-window -h -c "~/coding/privacyViolation"
 
 tmux new-window -c "~/coding/privacyViolation"
@@ -55,11 +49,9 @@ name = "ermokie"
 startup_command = '''
 tmux send-keys "nvim ." C-m
 
-# Window 2 with a split
 tmux new-window -c "~/coding/codeberg/ermokie"
 tmux split-window -v -c "~/coding/codeberg/ermokie"
 
-# Window 3 in the local share dir
 tmux new-window -c "~/.local/share/ermokie"
 tmux select-window -t 1
 '''

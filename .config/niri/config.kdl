@@ -8,6 +8,7 @@ input {
 
     touchpad {
         tap
+        dwt
         natural-scroll
         accel-profile "flat"
     }
@@ -21,13 +22,14 @@ input {
     warp-mouse-to-focus
 }
 
-// output "DP-1" {
-//     mode "2560x1440@165"
-//     scale 1.6
-//     position x=0 y=0
-// }
+output "DP-1" {
+    mode "2560x1440@165"
+    scale 1.6
+    position x=0 y=0
+}
 
 output "eDP-1" {
+    off
     mode "2560x1600"
     scale 2.4
 }
@@ -97,6 +99,7 @@ layer-rule {
     place-within-backdrop true
 }
 spawn-at-startup "/home/veya/github/niri-wallpaper/build/niri-wallpaper" "/home/veya/wallpapers/gleep" "-i" "3600" "-o" "eDP-1"
+spawn-at-startup "/home/veya/github/niri-wallpaper/build/niri-wallpaper" "/home/veya/wallpapers/gleep" "-i" "3600" "-o" "DP-1"
 
 prefer-no-csd
 

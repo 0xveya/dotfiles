@@ -12,7 +12,7 @@ _darcs
 \.hg
 \.nix
 \.git
-\.jj
+\.jj(/.*)?
 \.gitignore
 \.gitmodules
 
