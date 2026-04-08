@@ -2,5 +2,6 @@
 experimental = true
 
 [tools]
+codex = "latest"
 television = "latest"
 yq = "latest"

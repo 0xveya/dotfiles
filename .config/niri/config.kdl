@@ -87,6 +87,7 @@ layout {
     }
 }
 
+spawn-at-startup "xwayland-satellite"
 spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "cursor-theme" "BreezeX-RosePine-Linux"
 spawn-at-startup "awww-daemon"
 spawn-at-startup "dunst"

@@ -1,3 +1,30 @@
+let cache_dirs = [
+    ($env.HOME | path join ".cache/starship")
+    ($env.HOME | path join ".cache/mise")
+    ($env.HOME | path join ".cache/carapace")
+    ($env.HOME | path join ".cache/zoxide")
+    ($env.HOME | path join ".cache/usage")
+    ($env.HOME | path join ".local/share/atuin")
+]
+
+$cache_dirs | each { |it|
+    if not ($it | path exists) {
+        mkdir $it
+    }
+}
+
+starship init nu | save -f ~/.cache/starship/init.nu
+zoxide init nushell --cmd cd | save -f ~/.cache/zoxide/init.nu
+mise activate nu | save -f ~/.cache/mise/init.nu
+atuin init nu --disable-up-arrow | save -f ~/.local/share/atuin/init.nu
+carapace _carapace nushell | save -f ~/.cache/carapace/init.nu
+
+use ~/.cache/starship/init.nu
+source ~/.zoxide.nu
+use ~/.cache/mise/init.nu
+source ~/.cache/carapace/init.nu
+source ~/.local/share/atuin/init.nu
+
 let fish_completer = {|spans|
     fish --command $"complete '--do-complete=($spans | str replace --all "'" "\\'" | str join ' ')'"
     | from tsv --flexible --noheaders --no-infer
@@ -33,6 +60,7 @@ let external_completer = {|spans|
         nu => $fish_completer
         git => $fish_completer
         asdf => $fish_completer
+        mise => $fish_completer
         _ => $carapace_completer
     } | do $in $spans
 }
@@ -120,22 +148,17 @@ alias k = kubectl
 alias g = gns3util
 alias gr = go run .
 alias zr = zig build run
+alias cr = cargo run
 
-alias rec = asciinema rec
-alias play = asciinema play
-alias stream = asciinema stream -r
 alias ducktwerk = duckdb
 alias ragebait = /home/veya/mini-moulinette/mini-moul.sh
 alias oarsch = norminette
 alias ip = ip -c
 
-def uuid [] {
+def uuid4 [] {
     ^python3 -c "import uuid; print(uuid.uuid4())"
 }
 
-
-source ~/.zoxide.nu
-source ~/.cache/carapace/init.nu
-source ~/.local/share/atuin/init.nu
-use ~/.cache/starship/init.nu
-use ~/.cache/mise/init.nu
+def uuid7 [] {
+    ^python3 -c "import uuid; print(uuid.uuid7())"
+}

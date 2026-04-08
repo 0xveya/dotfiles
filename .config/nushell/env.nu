@@ -22,18 +22,3 @@ $env.PATH = [
     "/usr/lib/rustup/bin"
     "/home/veya/.local/funcheck/host"
 ]
-
-mkdir ~/.cache/starship
-starship init nu | save -f ~/.cache/starship/init.nu
-zoxide init nushell --cmd cd | save -f ~/.zoxide.nu
-mkdir ~/.cache/mise
-^mise activate nu | save -f ~/.cache/mise/init.nu
-mkdir ~/.local/share/atuin/
-atuin init nu | save -f ~/.local/share/atuin/init.nu
-
-
-$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
-mkdir ~/.cache/carapace
-carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
-
-$env.EDITOR = "nvim"
