@@ -151,7 +151,9 @@ alias zr = zig build run
 alias cr = cargo run
 
 alias ducktwerk = duckdb
-alias ragebait = /home/veya/mini-moulinette/mini-moul.sh
+def ragebait [...args] {
+    run-external ($env.HOME | path join "mini-moulinette/mini-moul.sh") ...$args
+}
 alias oarsch = norminette
 alias ip = ip -c
 

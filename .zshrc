@@ -3,13 +3,13 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH=$PATH:/home/veya/.cargo/bin 
+export PATH=$PATH:$HOME/.cargo/bin
 PATH="$PATH":"$HOME/.local/scripts/"
 export LANG=en_US.UTF-8
 export EDITOR="nvim"
-#export ANDROID_HOME=/home/veya/Android/Sdk
-#path+=('/home/veya/Android/Sdk/platform-tools')
-#path=('/home/veya/Android/Sdk/platform-tools' $path)
+#export ANDROID_HOME=$HOME/Android/Sdk
+#path+=("$HOME/Android/Sdk/platform-tools")
+#path=("$HOME/Android/Sdk/platform-tools" $path)
 export PATH
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -126,7 +126,7 @@ alias itsi="cp -r ~/obsidianschule/latex/template/itsi/* ."
 alias nwt="cp -r ~/obsidianschule/latex/template/nwt/* ."
 
 
-if [ -e /home/veya/.nix-profile/etc/profile.d/nix.sh ]; then . /home/veya/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 . ~/.gns3util-complete.zsh
 export PATH="$HOME/.local/bin:$PATH"
 

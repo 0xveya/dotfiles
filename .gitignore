@@ -1,2 +1,3 @@
 .config/nushell/history.txt
 .config/tmux/plugins/
+.config/fish/fish_variables

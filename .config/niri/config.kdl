@@ -22,6 +22,7 @@ input {
     warp-mouse-to-focus
 }
 
+// niri-monitor-preset:start
 output "DP-1" {
     mode "2560x1440@165"
     scale 1.6
@@ -33,6 +34,7 @@ output "eDP-1" {
     mode "2560x1600"
     scale 2.4
 }
+// niri-monitor-preset:end
 
 
 workspace "1"
@@ -99,8 +101,8 @@ layer-rule {
     match namespace="^swaync$"
     place-within-backdrop true
 }
-spawn-at-startup "/home/veya/github/niri-wallpaper/build/niri-wallpaper" "/home/veya/wallpapers/gleep" "-i" "3600" "-o" "eDP-1"
-spawn-at-startup "/home/veya/github/niri-wallpaper/build/niri-wallpaper" "/home/veya/wallpapers/gleep" "-i" "3600" "-o" "DP-1"
+spawn-at-startup "sh" "-c" "exec \"$HOME/github/niri-wallpaper/build/niri-wallpaper\" \"$HOME/wallpapers/gleep\" -i 3600 -o eDP-1"
+spawn-at-startup "sh" "-c" "exec \"$HOME/github/niri-wallpaper/build/niri-wallpaper\" \"$HOME/wallpapers/gleep\" -i 3600 -o DP-1"
 
 prefer-no-csd
 
@@ -180,10 +182,10 @@ binds {
     Mod+Shift+W { spawn "helium-browser"; }
     Mod+Shift+O { spawn "obsidian"; }
 
-    Mod+Shift+S { spawn "/home/veya/.config/hypr/screenshot_take.sh"; }
-    Mod+Shift+H { spawn "/home/veya/.config/hypr/screenshot_edit.sh"; }
+    Mod+Shift+S { spawn "sh" "-c" "exec \"$HOME/.config/hypr/screenshot_take.sh\""; }
+    Mod+Shift+H { spawn "sh" "-c" "exec \"$HOME/.config/hypr/screenshot_edit.sh\""; }
 
-    Mod+Shift+N { spawn "~/.local/bin/toggle-dunst"; }
+    Mod+Shift+N { spawn "sh" "-c" "exec \"$HOME/.local/bin/toggle-dunst\""; }
 
     Mod+Shift+X { spawn "hyprlock"; }
 

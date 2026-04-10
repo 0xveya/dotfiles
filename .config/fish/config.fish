@@ -26,18 +26,18 @@ if status is-interactive
     alias owo='sudo'
     alias uwu='sudo'
     alias pwease='sudo'
-    alias upload='fish ~/dotfiles/.config/fish/thing.fish -u'
-    alias download='fish ~/dotfiles/.config/fish/thing.fish'
+    alias upload='fish "$HOME/dotfiles/.config/fish/thing.fish" -u'
+    alias download='fish "$HOME/dotfiles/.config/fish/thing.fish"'
     alias clock='tty-clock -sc'
     alias neovim='nvim'
     alias v='nvim'
     alias vim='nvim'
-    alias vd='cd /home/veya/dotfiles && nvim .'
+    alias vd='cd "$HOME/dotfiles" && nvim .'
     alias ff='hyfetch'
     alias :3='hyfetch'
     alias putty='sudo cu -l /dev/ttyUSB0 -s 9600'
     alias ls='eza --icons'
-    alias t='bash -c "~/dotfiles/.config/tmux/tmux_startup.sh"'
+    alias t='bash -c "$HOME/dotfiles/.config/tmux/tmux_startup.sh"'
     alias ga='git add'
     alias glog='git log'
     alias gs='git status'
@@ -55,10 +55,10 @@ if status is-interactive
     alias pd='podman-compose'
     alias docker='podman'
     alias ducktwerk='duckdb'
-    alias ragebait='/home/veya/mini-moulinette/mini-moul.sh'
+    alias ragebait='$HOME/mini-moulinette/mini-moul.sh'
     alias oarsch='norminette'
 end
-set -gx PATH /home/veya/.local/funcheck/host $PATH
+set -gx PATH $HOME/.local/funcheck/host $PATH
 
 alias gbuild="mise run build-cli && grefresh"
 abbr -a gdev "./dist/gns3util"

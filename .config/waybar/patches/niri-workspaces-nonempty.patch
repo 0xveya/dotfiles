@@ -1,0 +1,164 @@
+diff --git a/src/modules/niri/backend.cpp b/src/modules/niri/backend.cpp
+index de3f8a9a..cfeaf58e 100644
+--- a/src/modules/niri/backend.cpp
++++ b/src/modules/niri/backend.cpp
+@@ -12,6 +12,7 @@
+ #include <iostream>
+ #include <string>
+ #include <thread>
++#include <unordered_set>
+
+ #include "giomm/datainputstream.h"
+ #include "giomm/dataoutputstream.h"
+@@ -95,11 +96,26 @@ void IPC::startIPC() {
+ void IPC::parseIPC(const std::string& line) {
+   const auto ev = parser_.parse(line);
+   const auto members = ev.getMemberNames();
+-  if (members.size() != 1) throw std::runtime_error("Event must have a single member");
++
++  if (members.size() != 1) {
++    throw std::runtime_error("Event must have a single member");
++  }
+
+   {
+     auto lock = lockData();
+
++    auto updateWorkspaceWindowFlags = [&]() {
++      std::unordered_set<uint64_t> occupied;
++
++      for (const auto& win : windows_) {
++        occupied.insert(win["workspace_id"].asUInt64());
++      }
++
++      for (auto& ws : workspaces_) {
++        ws["has_windows"] = occupied.count(ws["id"].asUInt64()) != 0;
++      }
++    };
++
+     if (const auto& payload = ev["WorkspacesChanged"]) {
+       workspaces_.clear();
+       const auto& values = payload["workspaces"];
+@@ -113,39 +129,53 @@ void IPC::parseIPC(const std::string& line) {
+         if (aOutput == bOutput) return aIdx < bIdx;
+         return aOutput < bOutput;
+       });
++
++      updateWorkspaceWindowFlags();
+     } else if (const auto& payload = ev["WorkspaceActivated"]) {
+       const auto id = payload["id"].asUInt64();
+       const auto focused = payload["focused"].asBool();
++
+       auto it = std::find_if(workspaces_.begin(), workspaces_.end(),
+                              [id](const auto& ws) { return ws["id"].asUInt64() == id; });
++
+       if (it != workspaces_.end()) {
+         const auto& ws = *it;
+         const auto& output = ws["output"].asString();
++
+         for (auto& ws : workspaces_) {
+           const auto got_activated = (ws["id"].asUInt64() == id);
+-          if (ws["output"] == output) ws["is_active"] = got_activated;
+-
+-          if (focused) ws["is_focused"] = got_activated;
++          if (ws["output"] == output) {
++            ws["is_active"] = got_activated;
++          }
++          if (focused) {
++            ws["is_focused"] = got_activated;
++          }
+         }
+       } else {
+         spdlog::error("Activated unknown workspace");
+       }
++      updateWorkspaceWindowFlags();
+     } else if (const auto& payload = ev["WorkspaceActiveWindowChanged"]) {
+       const auto workspaceId = payload["workspace_id"].asUInt64();
++
+       auto it = std::find_if(workspaces_.begin(), workspaces_.end(), [workspaceId](const auto& ws) {
+         return ws["id"].asUInt64() == workspaceId;
+       });
++
+       if (it != workspaces_.end()) {
+         auto& ws = *it;
+         ws["active_window_id"] = payload["active_window_id"];
+       } else {
+         spdlog::error("Active window changed on unknown workspace");
+       }
++      updateWorkspaceWindowFlags();
+     } else if (const auto& payload = ev["WorkspaceUrgencyChanged"]) {
+       const auto id = payload["id"].asUInt64();
+       const auto urgent = payload["urgent"].asBool();
++
+       auto it = std::find_if(workspaces_.begin(), workspaces_.end(),
+                              [id](const auto& ws) { return ws["id"].asUInt64() == id; });
++
+       if (it != workspaces_.end()) {
+         auto& ws = *it;
+         ws["is_urgent"] = urgent;
+@@ -158,18 +188,23 @@ void IPC::parseIPC(const std::string& line) {
+       keyboardLayoutCurrent_ = layouts["current_idx"].asUInt();
+
+       keyboardLayoutNames_.clear();
+-      for (const auto& fullName : names) keyboardLayoutNames_.push_back(fullName.asString());
++      for (const auto& fullName : names) {
++        keyboardLayoutNames_.push_back(fullName.asString());
++      }
+     } else if (const auto& payload = ev["KeyboardLayoutSwitched"]) {
+       keyboardLayoutCurrent_ = payload["idx"].asUInt();
+     } else if (const auto& payload = ev["WindowsChanged"]) {
+       windows_.clear();
+       const auto& values = payload["windows"];
+       std::copy(values.begin(), values.end(), std::back_inserter(windows_));
++      updateWorkspaceWindowFlags();
+     } else if (const auto& payload = ev["WindowOpenedOrChanged"]) {
+       const auto& window = payload["window"];
+       const auto id = window["id"].asUInt64();
++
+       auto it = std::find_if(windows_.begin(), windows_.end(),
+                              [id](const auto& win) { return win["id"].asUInt64() == id; });
++
+       if (it == windows_.end()) {
+         windows_.push_back(window);
+
+@@ -181,18 +216,25 @@ void IPC::parseIPC(const std::string& line) {
+       } else {
+         *it = window;
+       }
++
++      updateWorkspaceWindowFlags();
+     } else if (const auto& payload = ev["WindowClosed"]) {
+       const auto id = payload["id"].asUInt64();
++
+       auto it = std::find_if(windows_.begin(), windows_.end(),
+                              [id](const auto& win) { return win["id"].asUInt64() == id; });
++
+       if (it != windows_.end()) {
+         windows_.erase(it);
+       } else {
+         spdlog::error("Unknown window closed");
+       }
++
++      updateWorkspaceWindowFlags();
+     } else if (const auto& payload = ev["WindowFocusChanged"]) {
+       const auto focused = !payload["id"].isNull();
+       const auto id = payload["id"].asUInt64();
++
+       for (auto& win : windows_) {
+         win["is_focused"] = focused && win["id"].asUInt64() == id;
+       }
+diff --git a/src/modules/niri/workspaces.cpp b/src/modules/niri/workspaces.cpp
+index 3e8a432e..d4b1c6fc 100644
+--- a/src/modules/niri/workspaces.cpp
++++ b/src/modules/niri/workspaces.cpp
+@@ -37,8 +37,9 @@ void Workspaces::doUpdate() {
+   const auto& workspaces = gIPC->workspaces();
+   std::copy_if(workspaces.cbegin(), workspaces.cend(), std::back_inserter(my_workspaces),
+                [&](const auto& ws) {
+-                 if (alloutputs) return true;
+-                 return ws["output"].asString() == bar_.output->name;
++                 if (!alloutputs && ws["output"].asString() != bar_.output->name) return false;
++
++                 return ws["has_windows"].asBool() || ws["is_active"].asBool();
+                });
+
+   // Remove buttons for removed workspaces.

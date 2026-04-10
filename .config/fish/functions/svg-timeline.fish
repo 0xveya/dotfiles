@@ -31,13 +31,12 @@ function svg-timeline
     echo "Port: $port"
     echo "Opening http://localhost:$port"
     
-    # Hardcoded path to svg-term-cli directory
-    set project_dir "/home/veya/coding/ermgamba3/svg-term-cli"
+    set project_dir "$HOME/coding/ermgamba3/svg-term-cli"
     
     # Verify the directory exists and contains timeline-server.ts
     if not test -d "$project_dir"
         echo "Error: svg-term-cli directory not found at $project_dir"
-        echo "Please update the hardcoded path in the script"
+        echo "Please update project_dir in the script"
         return 1
     end
     
