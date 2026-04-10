@@ -14,8 +14,8 @@ declare type Preferences = ExtensionPreferences
 declare namespace Preferences {
   /** Command: Connect to Session */
 	export type CmdConnect = ExtensionPreferences & {
-		/** Open with (required) - Open with */
-		"openWithApp"?: string;
+		/** Terminal Command - Shell command used to open a session. Use {session} as the session name placeholder. */
+		"terminalCommand"?: string;
 
 		/** Environment Path - Colon-separated PATH (Unix-style), e.g /usr/local/bin:/usr/bin */
 		"environmentPath"?: string;

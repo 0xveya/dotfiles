@@ -12,7 +12,6 @@ import {
   Color,
 } from "@raycast/api";
 import { getSessions, connectToSession, isTmuxRunning, Session } from "./sesh";
-import { openApp } from "./app";
 
 function getIcon(session: Session) {
   switch (session.Src) {
@@ -84,7 +83,6 @@ export default function ConnectCommand() {
     try {
       setIsLoading(true);
       await connectToSession(session);
-      await openApp();
       await closeMainWindow();
       await clearSearchBar();
     } catch (error) {

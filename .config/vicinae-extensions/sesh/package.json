@@ -24,12 +24,12 @@
       "mode": "view",
       "preferences": [
         {
-          "name": "openWithApp",
-          "type": "appPicker",
+          "name": "terminalCommand",
+          "type": "textfield",
           "required": true,
-          "title": "Open with (required)",
-          "description": "Open with",
-          "default": "Terminal"
+          "title": "Terminal Command",
+          "description": "Shell command used to open a session. Use {session} as the session name placeholder.",
+          "default": "kitty --class sesh -e sesh connect {session}"
         },
         {
           "name": "environmentPath",

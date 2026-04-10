@@ -1,6 +1,6 @@
-import { exec } from "child_process";
+import { getPreferenceValues } from "@raycast/api";
+import { exec, spawn } from "child_process";
 import { getEnv } from "./env";
-import { spawn } from "child_process";
 
 const env = getEnv();
 
@@ -27,18 +27,24 @@ export function getSessions() {
   });
 }
 
+function shellQuote(value: string) {
+  return `'${value.replace(/'/g, "'\\''")}'`;
+}
+
 export function connectToSession(session: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      const child = spawn(
-        "kitty",
-        ["--class", "sesh", "-e", "sesh", "connect", session],
-        {
-          env,
-          detached: true,
-          stdio: "ignore",
-        }
+      const { terminalCommand } = getPreferenceValues<Preferences.CmdConnect>();
+      const command = (terminalCommand || "kitty --class sesh -e sesh connect {session}").replace(
+        "{session}",
+        shellQuote(session),
       );
+
+      const child = spawn("sh", ["-lc", command], {
+        env,
+        detached: true,
+        stdio: "ignore",
+      });
       child.unref();
       resolve();
     } catch (error) {
