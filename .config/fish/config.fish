@@ -35,7 +35,7 @@ if status is-interactive
     alias vd='cd "$HOME/dotfiles" && nvim .'
     alias ff='hyfetch'
     alias :3='hyfetch'
-    alias putty='sudo cu -l /dev/ttyUSB0 -s 9600'
+    alias putty='cu -l /dev/ttyUSB0 -s 9600'
     alias ls='eza --icons'
     alias t='bash -c "$HOME/dotfiles/.config/tmux/tmux_startup.sh"'
     alias ga='git add'

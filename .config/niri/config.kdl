@@ -24,13 +24,13 @@ input {
 
 // niri-monitor-preset:start
 output "DP-1" {
+    off
     mode "2560x1440@165"
     scale 1.6
     position x=0 y=0
 }
 
 output "eDP-1" {
-    off
     mode "2560x1600"
     scale 2.4
 }
@@ -251,6 +251,7 @@ binds {
 
     Mod+B { spawn "pkill" "-SIGUSR1" "waybar"; }
     Mod+W { spawn "pkill" "-SIGUSR2" "waybar"; }
+    Mod+U { spawn "wooz" "--mouse-track" ; }
 
     Mod+V { spawn "vicinae" "vicinae://extensions/vicinae/clipboard/history"; }
 

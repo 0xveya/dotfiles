@@ -23,7 +23,6 @@ use ~/.cache/starship/init.nu
 source ~/.zoxide.nu
 use ~/.cache/mise/init.nu
 source ~/.cache/carapace/init.nu
-source ~/.local/share/atuin/init.nu
 
 let fish_completer = {|spans|
     fish --command $"complete '--do-complete=($spans | str replace --all "'" "\\'" | str join ' ')'"
@@ -120,6 +119,8 @@ $env.config.keybindings = [
     }
 ]
 
+source ~/.local/share/atuin/init.nu
+
 alias owo = sudo
 alias uwu = sudo
 alias pwease = sudo
@@ -132,7 +133,7 @@ alias ff = hyfetch
 alias ":3" = hyfetch
 alias clock = tty-clock -sc
 
-alias putty = sudo cu -l /dev/ttyUSB0 -s 9600
+alias putty = cu -l /dev/ttyUSB0 -s 9600
 alias cat = bat
 
 alias ga = git add
