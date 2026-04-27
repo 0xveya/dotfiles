@@ -157,6 +157,46 @@ def ragebait [...args] {
 }
 alias oarsch = norminette
 alias ip = ip -c
+alias zt = zig build test --summary all
+
+def --wrapped valgrind [...args] {
+    let result = (
+        with-env {
+            DEBUGINFOD_URLS: "https://debuginfod.archlinux.org"
+        } {
+            ^valgrind ...$args | complete
+        }
+    )
+
+    let text = ($result.stderr + $result.stdout)
+
+    $text
+    | lines
+    | each {|line|
+        if ($line | str contains "ERROR SUMMARY: 0 errors") {
+            $"(ansi green_bold)($line)(ansi reset)"
+        } else if ($line | str contains "ERROR SUMMARY") {
+            $"(ansi red_bold)($line)(ansi reset)"
+        } else if ($line | str contains "All heap blocks were freed") {
+            $"(ansi green_bold)($line)(ansi reset)"
+        } else if ($line | str contains "no leaks are possible") {
+            $"(ansi green)($line)(ansi reset)"
+        } else if ($line | str contains "definitely lost") {
+            $"(ansi yellow_bold)($line)(ansi reset)"
+        } else if ($line | str contains "indirectly lost") {
+            $"(ansi yellow)($line)(ansi reset)"
+        } else if ($line | str contains "possibly lost") {
+            $"(ansi magenta)($line)(ansi reset)"
+        } else if ($line | str contains "Invalid read") or ($line | str contains "Invalid write") {
+            $"(ansi red_bold)($line)(ansi reset)"
+        } else if ($line | str contains "Error") {
+            $"(ansi red)($line)(ansi reset)"
+        } else {
+            $line
+        }
+    }
+    | str join "\n"
+}
 
 def uuid4 [] {
     ^python3 -c "import uuid; print(uuid.uuid4())"

@@ -1,0 +1,12 @@
+[metadata]
+name = "qute-sessions"
+description = "Browse qutebrowser sessions"
+requirements = ["uv"]
+
+[source]
+command = "~/dotfiles/.config/scripts/qute-tv-sessions.py list-sessions"
+
+[preview]
+command = "~/dotfiles/.config/scripts/qute-tv-sessions.py preview-session '{split:\\t:0}'"
+
+[ui]

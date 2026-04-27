@@ -1,3 +1,7 @@
+import os
+
+home = os.path.expanduser("~")
+
 config.load_autoconfig(False)
 
 # Rose Pine Moon palette.
@@ -44,16 +48,12 @@ c.tabs.last_close = "close"
 
 # Ad blocking. With your current install this uses hosts blocking; installing the
 # optional Python adblock package enables Brave/ABP filtering automatically.
+c.content.blocking.method = "adblock"
 c.content.blocking.enabled = True
-c.content.blocking.method = "auto"
 c.content.blocking.adblock.lists = [
     "https://easylist.to/easylist/easylist.txt",
     "https://easylist.to/easylist/easyprivacy.txt",
-    "https://secure.fanboy.co.nz/fanboy-annoyance.txt",
-    "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt",
-]
-c.content.blocking.hosts.lists = [
-    "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+    "https://easylist.to/easylist/fanboy-annoyance.txt",
 ]
 
 # Rose Pine Moon colors.
@@ -200,3 +200,11 @@ config.bind("J", "tab-next")
 config.bind("K", "tab-prev")
 config.bind("gJ", "tab-move +")
 config.bind("gK", "tab-move -")
+config.bind("<Ctrl-Shift-I>", "devtools")
+
+# Sessions / persistent autosave
+config.bind("<Space>ss", "spawn --detach vicinae 'vicinae://extensions/veya/qutebrowser-sessions/qutebrowser-sessions?toggle=true'")
+config.bind("<Space>sb", "spawn --detach vicinae 'vicinae://extensions/veya/qutebrowser-sessions/active-session-tabs?toggle=true'")
+config.bind("<Space>st", "spawn --detach vicinae 'vicinae://extensions/veya/qutebrowser-sessions/search-session-tabs?toggle=true'")
+config.bind("<Space>sn", "cmd-set-text -s :session-save ")
+config.bind("<Ctrl-q>", "quit --save")
