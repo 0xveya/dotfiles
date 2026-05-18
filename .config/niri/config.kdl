@@ -30,7 +30,6 @@ output "DP-1" {
 }
 
 output "eDP-1" {
-    off
     mode "2560x1600"
     scale 2.4
 }
@@ -169,9 +168,9 @@ binds {
     Mod+Shift+F { spawn "thunar"; }
     Mod+Shift+V { toggle-window-floating; }
     Mod+D { spawn "tofi-drun" "--drun-launch=true"; }
-    Mod+E { spawn "vicinae" "vicinae://extensions/vicinae/core/search-emojis"; }
+    Mod+E { spawn "vicinae" "vicinae://launch/core/search-emojis"; }
     Mod+C { spawn "gnome-calculator"; }
-    Mod+T { spawn "vicinae" "vicinae://extensions/joshmedeski/sesh/cmd-connect"; }
+    Mod+T { spawn "vicinae" "vicinae://launch/@joshmedeski/sesh/cmd-connect"; }
 
     Mod+F { fullscreen-window; }
     Mod+Alt+F { fullscreen-window; }
@@ -253,7 +252,7 @@ binds {
     Mod+W { spawn "pkill" "-SIGUSR2" "waybar"; }
     Mod+U { spawn "wooz" "--mouse-track" ; }
 
-    Mod+V { spawn "vicinae" "vicinae://extensions/vicinae/clipboard/history"; }
+    Mod+V { spawn "vicinae" "vicinae://launch/clipboard/history"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }

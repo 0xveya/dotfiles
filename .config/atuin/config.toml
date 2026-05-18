@@ -4,5 +4,8 @@ history_filter = [
   "^# [a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
   "^with-env \\{ ATUIN_LOG: error",
   "^let output = \\(run-external atuin search",
-  "^atuin search .* --delete-it"
+  "^atuin search .* --delete-it",
 ]
+
+[daemon]
+enabled = true

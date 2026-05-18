@@ -1,28 +1,28 @@
-let cache_dirs = [
-    ($env.HOME | path join ".cache/starship")
-    ($env.HOME | path join ".cache/mise")
-    ($env.HOME | path join ".cache/carapace")
-    ($env.HOME | path join ".cache/zoxide")
-    ($env.HOME | path join ".cache/usage")
-    ($env.HOME | path join ".local/share/atuin")
-]
+# let cache_dirs = [
+#     ($env.HOME | path join ".cache/starship")
+#     ($env.HOME | path join ".cache/mise")
+#     ($env.HOME | path join ".cache/carapace")
+#     ($env.HOME | path join ".cache/zoxide")
+#     ($env.HOME | path join ".cache/usage")
+#     ($env.HOME | path join ".local/share/atuin")
+# ]
+#
+# $cache_dirs | each { |it|
+#     if not ($it | path exists) {
+#         mkdir $it
+#     }
+# }
+#
+# starship init nu | save -f ~/.cache/starship/init.nu
+# zoxide init nushell --cmd cd | save -f ~/.cache/zoxide/init.nu
+# mise activate nu | save -f ~/.cache/mise/init.nu
+# atuin init nu --disable-up-arrow | save -f ~/.local/share/atuin/init.nu
+# carapace _carapace nushell | save -f ~/.cache/carapace/init.nu
 
-$cache_dirs | each { |it|
-    if not ($it | path exists) {
-        mkdir $it
-    }
-}
-
-starship init nu | save -f ~/.cache/starship/init.nu
-zoxide init nushell --cmd cd | save -f ~/.cache/zoxide/init.nu
-mise activate nu | save -f ~/.cache/mise/init.nu
-atuin init nu --disable-up-arrow | save -f ~/.local/share/atuin/init.nu
-carapace _carapace nushell | save -f ~/.cache/carapace/init.nu
-
-use ~/.cache/starship/init.nu
-source ~/.zoxide.nu
-use ~/.cache/mise/init.nu
-source ~/.cache/carapace/init.nu
+# use ~/.cache/starship/init.nu
+# source ~/.zoxide.nu
+# use ~/.cache/mise/init.nu
+# source ~/.cache/carapace/init.nu
 
 let fish_completer = {|spans|
     fish --command $"complete '--do-complete=($spans | str replace --all "'" "\\'" | str join ' ')'"
@@ -94,9 +94,16 @@ $env.config = {
         isolation: false
     }
 }
-
-$env.PROMPT_INDICATOR_VI_INSERT = {|| "" }
-$env.PROMPT_INDICATOR_VI_NORMAL = {|| "" }
+$env.config.keybindings = [
+    {
+        name: accept_autosuggestion
+        modifier: alt
+        keycode: char_m
+        mode: [emacs, vi_insert]
+        event: { send: HistoryHintComplete }
+    }
+]
+$env.config.shell_integration.osc133 = false
 
 alias clock = tty-clock -sc
 alias v = nvim
@@ -109,17 +116,6 @@ alias core-ls = eza --icons
 
 source ~/.config/nushell/catppuccin_macchiato.nu
 
-$env.config.keybindings = [
-    {
-        name: accept_autosuggestion
-        modifier: alt
-        keycode: char_m
-        mode: [emacs, vi_insert]
-        event: { send: HistoryHintComplete }
-    }
-]
-
-source ~/.local/share/atuin/init.nu
 
 alias owo = sudo
 alias uwu = sudo
@@ -150,12 +146,10 @@ alias g = gns3util
 alias gr = go run .
 alias zr = zig build run
 alias cr = cargo run
+alias meow = ^cat
+alias manyasl = less ~/Downloads/yasl.0
 
 alias ducktwerk = duckdb
-def ragebait [...args] {
-    run-external ($env.HOME | path join "mini-moulinette/mini-moul.sh") ...$args
-}
-alias oarsch = norminette
 alias ip = ip -c
 alias zt = zig build test --summary all
 
@@ -205,3 +199,31 @@ def uuid4 [] {
 def uuid7 [] {
     ^python3 -c "import uuid; print(uuid.uuid7())"
 }
+
+use $ENV_DIR atuin ATUIN_INIT_PATH
+source $ATUIN_INIT_PATH
+hide ATUIN_INIT_PATH
+
+use $ENV_DIR carapace CARAPACE_INIT_PATH
+source $CARAPACE_INIT_PATH
+hide CARAPACE_INIT_PATH
+
+use $ENV_DIR zoxide ZOXIDE_INIT_PATH
+source $ZOXIDE_INIT_PATH
+hide ZOXIDE_INIT_PATH
+
+use $ENV_DIR starship STARSHIP_INIT_PATH
+use $STARSHIP_INIT_PATH
+hide STARSHIP_INIT_PATH
+
+use $ENV_DIR mise MISE_INIT_PATH
+use $MISE_INIT_PATH
+hide MISE_INIT_PATH
+
+let old_prompt = $env.PROMPT_COMMAND
+$env.PROMPT_COMMAND = {
+  print --no-newline $'(ansi esc)]9;9;('.' | path expand)(ansi esc)\'
+  do $old_prompt
+}
+$env.PROMPT_INDICATOR_VI_INSERT = { "" }
+$env.PROMPT_INDICATOR_VI_NORMAL = { "" }
