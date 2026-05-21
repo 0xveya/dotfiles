@@ -56,3 +56,9 @@ $init_jobs
   | reduce --fold {} {|env_vars, acc| $acc | merge $env_vars }
   | reject --optional PWD
   | load-env
+
+
+let systemd_sock = $"($env.XDG_RUNTIME_DIR)/ssh-agent.socket"
+if ($systemd_sock | path exists) {
+    load-env { SSH_AUTH_SOCK: $systemd_sock }
+}

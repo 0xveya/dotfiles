@@ -9,3 +9,4 @@ history_filter = [
 
 [daemon]
 enabled = true
+systemd_socket = false

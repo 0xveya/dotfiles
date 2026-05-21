@@ -7,6 +7,22 @@ export PATH=$PATH:$HOME/.cargo/bin
 PATH="$PATH":"$HOME/.local/scripts/"
 export LANG=en_US.UTF-8
 export EDITOR="nvim"
+if [[ -n "${VIVEN_MODE:-}" ]]; then
+    export EDITOR="vim"
+    export VISUAL="vim"
+    PROMPT='; '
+    RPROMPT=''
+    RPS1=''
+    bindkey -e
+    bindkey '^L' clear-screen
+    alias vi='/usr/bin/vim -u NONE -N'
+    alias vim='/usr/bin/vim -u NONE -N'
+    alias v='vim'
+    alias nvim='/usr/bin/nvim -u NONE -i NONE'
+    printf '\e[2 q'
+    printf '\e]12;#ffffff\a'
+    return
+fi
 #export ANDROID_HOME=$HOME/Android/Sdk
 #path+=("$HOME/Android/Sdk/platform-tools")
 #path=("$HOME/Android/Sdk/platform-tools" $path)
@@ -26,7 +42,7 @@ source ~/Repos/znap/znap.zsh  # Start Znap
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 znap source marlonrichert/zsh-edit
-bind '^L' clear
+bindkey '^L' clear-screen
 HISTORY_IGNORE=clear
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"

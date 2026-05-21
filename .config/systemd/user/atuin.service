@@ -1,0 +1,8 @@
+[Unit]
+Description=Atuin Daemon
+
+[Service]
+ExecStart=/usr/bin/atuin daemon start
+
+[Install]
+WantedBy=default.target

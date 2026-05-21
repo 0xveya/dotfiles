@@ -1,29 +1,3 @@
-# let cache_dirs = [
-#     ($env.HOME | path join ".cache/starship")
-#     ($env.HOME | path join ".cache/mise")
-#     ($env.HOME | path join ".cache/carapace")
-#     ($env.HOME | path join ".cache/zoxide")
-#     ($env.HOME | path join ".cache/usage")
-#     ($env.HOME | path join ".local/share/atuin")
-# ]
-#
-# $cache_dirs | each { |it|
-#     if not ($it | path exists) {
-#         mkdir $it
-#     }
-# }
-#
-# starship init nu | save -f ~/.cache/starship/init.nu
-# zoxide init nushell --cmd cd | save -f ~/.cache/zoxide/init.nu
-# mise activate nu | save -f ~/.cache/mise/init.nu
-# atuin init nu --disable-up-arrow | save -f ~/.local/share/atuin/init.nu
-# carapace _carapace nushell | save -f ~/.cache/carapace/init.nu
-
-# use ~/.cache/starship/init.nu
-# source ~/.zoxide.nu
-# use ~/.cache/mise/init.nu
-# source ~/.cache/carapace/init.nu
-
 let fish_completer = {|spans|
     fish --command $"complete '--do-complete=($spans | str replace --all "'" "\\'" | str join ' ')'"
     | from tsv --flexible --noheaders --no-infer
@@ -64,6 +38,7 @@ let external_completer = {|spans|
     } | do $in $spans
 }
 
+
 $env.config = {
     show_banner: false
     edit_mode: vi
@@ -87,22 +62,31 @@ $env.config = {
 
         use_ls_colors: true
     }
-     history: {
+    history: {
         max_size: 100_000
         sync_on_enter: true
-        file_format: "plaintext"
-        isolation: false
+        file_format: "sqlite"
+        isolation: true
     }
+
+    menus: [
+        {
+            name: history_menu
+            only_buffer_difference: false
+            marker: "i am a bottom >w< "
+            type: {
+                layout: list
+                page_size: 10
+            }
+            style: {
+                text: normal
+                selected_text: green_bold
+                description_text: dim_gray
+            }
+        }
+    ]
 }
-$env.config.keybindings = [
-    {
-        name: accept_autosuggestion
-        modifier: alt
-        keycode: char_m
-        mode: [emacs, vi_insert]
-        event: { send: HistoryHintComplete }
-    }
-]
+
 $env.config.shell_integration.osc133 = false
 
 alias clock = tty-clock -sc
@@ -110,6 +94,7 @@ alias v = nvim
 alias vim = nvim
 alias ff = hyfetch
 alias ":3" = hyfetch
+alias flake8 = uvx flake8 . --exclude=.venv,.git,__pycache__
 
 alias putty = sudo cu -l /dev/ttyUSB0 -s 9600
 alias core-ls = eza --icons
@@ -152,6 +137,32 @@ alias manyasl = less ~/Downloads/yasl.0
 alias ducktwerk = duckdb
 alias ip = ip -c
 alias zt = zig build test --summary all
+
+def vivien [] {
+    ^systemctl --user stop kanata.service
+    let in_kitty = (($env | get -o KITTY_PID | default "") | is-not-empty)
+
+    if $in_kitty {
+        ^kitty --single-instance --wait-for-single-instance-window-close --title vivien -o background_opacity=1.0 -o font_size=16 -o cursor_shape=block -o cursor=#f8f8f2 -o cursor_text_color=#111111 -o foreground=#f8f8f2 -o background=#111111 /usr/bin/zsh -ic "export VIVEN_MODE=1 EDITOR=vim VISUAL=vim; exec zsh -i"
+    } else {
+        with-env {
+            VIVEN_MODE: "1"
+            EDITOR: "vim"
+            VISUAL: "vim"
+        } {
+            ^zsh -i
+        }
+    }
+    ^systemctl --user start kanata.service
+}
+
+def unvivien [] {
+    ^systemctl --user start kanata.service
+}
+
+def vivien-off [] {
+    ^systemctl --user stop kanata.service
+}
 
 def --wrapped valgrind [...args] {
     let result = (
@@ -226,4 +237,27 @@ $env.PROMPT_COMMAND = {
   do $old_prompt
 }
 $env.PROMPT_INDICATOR_VI_INSERT = { "" }
-$env.PROMPT_INDICATOR_VI_NORMAL = { "" }
+
+$env.config.keybindings = [
+    {
+        name: accept_autosuggestion
+        modifier: alt
+        keycode: char_m
+        mode: [emacs, vi_insert]
+        event: { send: HistoryHintComplete }
+    }
+    {
+        name: history_menu
+        modifier: control
+        keycode: char_r
+        mode: [emacs, vi_insert]
+        event: { send: Menu name: history_menu }
+    }
+    {
+        name: atuin_history
+        modifier: alt
+        keycode: char_r
+        mode: [emacs, vi_insert]
+        event: { send: executehostcommand cmd: (_atuin_search_cmd) }
+    }
+]
