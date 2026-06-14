@@ -42,7 +42,7 @@ let external_completer = {|spans|
 $env.config = {
     show_banner: false
     edit_mode: vi
-    buffer_editor: "nvim"
+    buffer_editor: "nano"
     cursor_shape: {
         vi_insert: line
         vi_normal: block
@@ -238,7 +238,23 @@ $env.PROMPT_COMMAND = {
 }
 $env.PROMPT_INDICATOR_VI_INSERT = { "" }
 
-$env.config.keybindings = [
+def _hist_search [] {
+    let res = (
+        ^/home/veya/coding/nushell_hist_thing/target/debug/nushell_hist_thing
+            --db ~/dotfiles/.config/nushell/history.sqlite3
+            --session (history session)
+            --forward-format "am i a good girl? >w<"c:w
+            --backward-format "i am a bottom >w<"
+        e>| str trim
+    )
+    if ($res | str starts-with "__execute__:") {
+        commandline edit --accept ($res | str replace "__execute__:" "")
+    } else if ($res | is-not-empty) {
+        commandline edit $res
+    }
+}
+
+$env.config.keybindings = ($env.config.keybindings | append [
     {
         name: accept_autosuggestion
         modifier: alt
@@ -247,17 +263,17 @@ $env.config.keybindings = [
         event: { send: HistoryHintComplete }
     }
     {
-        name: history_menu
-        modifier: control
-        keycode: char_r
-        mode: [emacs, vi_insert]
-        event: { send: Menu name: history_menu }
-    }
-    {
         name: atuin_history
         modifier: alt
         keycode: char_r
         mode: [emacs, vi_insert]
         event: { send: executehostcommand cmd: (_atuin_search_cmd) }
     }
-]
+    {
+        name: sigma_history_search
+        modifier: control
+        keycode: char_r
+        mode: [emacs, vi_normal, vi_insert]
+        event: { send: executehostcommand cmd: "_hist_search" }
+    }
+])
