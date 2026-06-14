@@ -1,6 +1,6 @@
 $env.EDITOR = "nvim"
 $env.GOPATH = ($env.HOME | path join ".go")
-$env.DOCKER_HOST = $"unix://($env.XDG_RUNTIME_DIR)/podman/podman.sock"
+# $env.DOCKER_HOST = $"unix://($env.XDG_RUNTIME_DIR)/podman/podman.sock"
 $env.INFISICAL_API_URL = "https://secrets.saygex.xyz"
 
 export const ENV_DIR = path self './env/mod.nu'
@@ -59,6 +59,10 @@ $init_jobs
 
 
 let systemd_sock = $"($env.XDG_RUNTIME_DIR)/ssh-agent.socket"
-if ($systemd_sock | path exists) {
-    load-env { SSH_AUTH_SOCK: $systemd_sock }
+	if ($systemd_sock | path exists) {
+	$env.SSH_AUTH_SOCK = $systemd_sock
 }
+# let systemd_sock = $"($env.XDG_RUNTIME_DIR)/ssh-agent.socket"
+# if ($systemd_sock | path exists) {
+#     load-env { SSH_AUTH_SOCK: $systemd_sock }
+# }

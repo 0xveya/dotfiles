@@ -93,6 +93,8 @@ layout {
     }
 }
 
+spawn-at-startup "~/.local/bin/tmux-sync-env"
+spawn-at-startup "systemctl" "--user" "restart" "tmux.service"
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "cursor-theme" "BreezeX-RosePine-Linux"
 spawn-at-startup "awww-daemon"
@@ -275,8 +277,8 @@ binds {
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
     XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    //F7 { spawn "backlight_control" "+10"; }
-    //F6 { spawn "backlight_control" "-10"; }
+    XF86MonBrightnessUp { spawn "backlight_control" "+10"; }
+    XF86MonBrightnessDown   { spawn "backlight_control" "-10"; }
 
     Mod+Space { spawn "vicinae" "toggle"; }
     Mod+Shift+E { quit; }

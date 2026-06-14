@@ -123,7 +123,7 @@ $env.config.color_config = {
   custom: $theme.pink
   background: $theme.base
   foreground: $theme.text
-  cursor: { bg: $theme.rosewater fg: $theme.base }
+  # cursor: { bg: $theme.rosewater fg: $theme.base }
   shape_range: $scheme.operator
   range: $scheme.operator
   shape_pipe: $scheme.operator

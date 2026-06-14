@@ -42,7 +42,7 @@ let external_completer = {|spans|
 $env.config = {
     show_banner: false
     edit_mode: vi
-    buffer_editor: "nano"
+    buffer_editor: "nvim"
     cursor_shape: {
         vi_insert: line
         vi_normal: block
@@ -98,8 +98,9 @@ alias flake8 = uvx flake8 . --exclude=.venv,.git,__pycache__
 
 alias putty = sudo cu -l /dev/ttyUSB0 -s 9600
 alias core-ls = eza --icons
+alias uselesspkgs = sudo pacman -Rns ...(^pacman -Qqdt | lines)
 
-source ~/.config/nushell/catppuccin_macchiato.nu
+# source ~/.config/nushell/catppuccin_macchiato.nu
 
 
 alias owo = sudo
@@ -124,7 +125,6 @@ alias gd = git diff --stat
 
 alias p = podman
 alias pd = podman-compose
-alias docker = podman
 
 alias k = kubectl
 alias g = gns3util
@@ -173,7 +173,7 @@ def --wrapped valgrind [...args] {
         }
     )
 
-    let text = ($result.stderr + $result.stdout)
+    let text = (($result.stderr | default "") + ($result.stdout | default ""))
 
     $text
     | lines
@@ -202,6 +202,8 @@ def --wrapped valgrind [...args] {
     }
     | str join "\n"
 }
+
+source ~/.config/nushell/valg.nu
 
 def uuid4 [] {
     ^python3 -c "import uuid; print(uuid.uuid4())"
@@ -277,3 +279,40 @@ $env.config.keybindings = ($env.config.keybindings | append [
         event: { send: executehostcommand cmd: "_hist_search" }
     }
 ])
+
+def tmux-fix-gui-env [] {
+    load-env {
+        DISPLAY: ":0"
+        WAYLAND_DISPLAY: "wayland-1"
+        DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+        SSH_AUTH_SOCK: "/run/user/1000/ssh-agent.socket"
+        XDG_CURRENT_DESKTOP: "niri"
+        XDG_RUNTIME_DIR: "/run/user/1000"
+        XDG_SESSION_DESKTOP: "niri"
+        XDG_SESSION_TYPE: "wayland"
+    }
+}
+
+def usb-diff [duration: duration = 5sec] {
+    let before = (lsusb | lines)
+    sleep $duration
+    let after = (lsusb | lines)
+
+    let added = ($after | where {|x| $x not-in $before})
+    let removed = ($before | where {|x| $x not-in $after})
+
+    if ($added | is-empty) and ($removed | is-empty) {
+        print "No changes detected"
+    } else {
+        if not ($added | is-empty) {
+            print "+ Added:"
+            for x in $added { print $"  ($x)" }
+        }
+        if not ($removed | is-empty) {
+            print "- Removed:"
+            for x in $removed { print $"  ($x)" }
+        }
+    }
+}
+
+$env.NIX_REMOTE = 'daemon'

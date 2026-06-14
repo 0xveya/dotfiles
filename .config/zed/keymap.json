@@ -1,0 +1,107 @@
+// Neovim/Snacks compatibility bindings for Zed Vim mode.
+// Leader is Space. These are deliberately limited to navigation, search,
+// LSP, Git, panes, and terminal—the parts used most often day-to-day.
+[
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      // Files, buffers, search, diagnostics
+      "space p v": "workspace::ToggleLeftDock",
+      "space s m": "file_finder::Toggle",
+      "space s f": "file_finder::Toggle",
+      "space s g": "pane::DeploySearch",
+      "space s w": "pane::DeploySearch",
+      "space s d": "diagnostics::Deploy",
+      "space s r": "editor::FindAllReferences",
+      "space /": "buffer_search::Deploy",
+      "space s /": "pane::DeploySearch",
+      "space s s": "project_symbols::Toggle",
+      "space space": "tab_switcher::Toggle",
+      "space b": "tab_switcher::ToggleAll",
+      "space b d": ["pane::CloseActiveItem", { "close_pinned": false }],
+      "space b o": ["pane::CloseOtherItems", { "close_pinned": false }],
+      "space x": ["pane::CloseActiveItem", { "close_pinned": false }],
+      "space f": "file_finder::Toggle",
+      "space e": "diagnostics::DeployCurrentFile",
+      "space q": ["pane::CloseActiveItem", { "close_pinned": false }],
+
+      // LSP navigation and code actions
+      "g d": "editor::GoToDefinition",
+      "g r": "editor::FindAllReferences",
+      "g shift-i": "editor::GoToImplementation",
+      "g shift-d": "editor::GoToDeclaration",
+      "space shift-d": "editor::GoToTypeDefinition",
+      "space d s": "outline::Toggle",
+      "space w s": "project_symbols::Toggle",
+      "space o": "outline::Toggle",
+      "space r n": "editor::Rename",
+      "space c a": "editor::ToggleCodeActions",
+      "space h": "editor::ToggleInlayHints",
+      "space l": "editor::ToggleCodeLens",
+      "shift-k": "editor::Hover",
+
+      // Git and changes
+      "space g s": "git_panel::ToggleFocus",
+      "space g d": "git::Diff",
+      "space g b": "git::Blame",
+      "] b": "pane::ActivateNextItem",
+      "[ b": "pane::ActivatePreviousItem",
+      "] c": "editor::GoToHunk",
+      "[ c": "editor::GoToPreviousHunk",
+
+      // Panes, splits, terminal
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-alt-h": "pane::SplitDown",
+      "ctrl-alt-v": "pane::SplitRight",
+      "space t": "terminal_panel::Toggle",
+      "space r": "task::Spawn",
+      "space z": "workspace::ToggleCenteredLayout",
+      "space a": "agent::ToggleFocus"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == visual",
+    "bindings": {
+      "space s g": "pane::DeploySearch",
+      "space c a": "editor::ToggleCodeActions"
+    }
+  },
+  {
+    "context": "!Editor && !Terminal",
+    "bindings": {
+      "space p v": "workspace::ToggleLeftDock",
+      "space s m": "file_finder::Toggle",
+      "space s f": "file_finder::Toggle",
+      "space s g": "pane::DeploySearch",
+      "space s w": "pane::DeploySearch",
+      "space s s": "project_symbols::Toggle",
+      "space s d": "diagnostics::Deploy",
+      "space space": "tab_switcher::Toggle",
+      "space b": "tab_switcher::ToggleAll",
+      "space f": "file_finder::Toggle",
+      "space g s": "git_panel::ToggleFocus",
+      "space t": "terminal_panel::Toggle",
+      "space z": "workspace::ToggleCenteredLayout",
+      "space a": "agent::ToggleFocus"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "space": null,
+      "space p v": "workspace::ToggleLeftDock"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-h": ["terminal::SendKeystroke", "ctrl-h"],
+      "ctrl-j": ["terminal::SendKeystroke", "ctrl-j"],
+      "ctrl-k": ["terminal::SendKeystroke", "ctrl-k"],
+      "ctrl-l": ["terminal::SendKeystroke", "ctrl-l"]
+    }
+  }
+]
