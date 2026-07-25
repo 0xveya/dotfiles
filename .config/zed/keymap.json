@@ -23,7 +23,8 @@
       "space x": ["pane::CloseActiveItem", { "close_pinned": false }],
       "space f": "file_finder::Toggle",
       "space e": "diagnostics::DeployCurrentFile",
-      "space q": ["pane::CloseActiveItem", { "close_pinned": false }],
+      // Neovim's <leader>q: open the current diagnostic/quickfix-style list.
+      "space q": "diagnostics::Deploy",
 
       // LSP navigation and code actions
       "g d": "editor::GoToDefinition",
@@ -54,12 +55,14 @@
       "ctrl-j": "workspace::ActivatePaneDown",
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-d": ["workspace::SendKeystrokes", "ctrl-d z z"],
+      "ctrl-u": ["workspace::SendKeystrokes", "ctrl-u z z"],
       "ctrl-alt-h": "pane::SplitDown",
       "ctrl-alt-v": "pane::SplitRight",
       "space t": "terminal_panel::Toggle",
       "space r": "task::Spawn",
       "space z": "workspace::ToggleCenteredLayout",
-      "space a": "agent::ToggleFocus"
+      "space a": "agent::Toggle"
     }
   },
   {
@@ -85,7 +88,7 @@
       "space g s": "git_panel::ToggleFocus",
       "space t": "terminal_panel::Toggle",
       "space z": "workspace::ToggleCenteredLayout",
-      "space a": "agent::ToggleFocus"
+      "space a": "agent::Toggle"
     }
   },
   {
@@ -98,6 +101,7 @@
   {
     "context": "Terminal",
     "bindings": {
+      "space t": "terminal_panel::Toggle",
       "ctrl-h": ["terminal::SendKeystroke", "ctrl-h"],
       "ctrl-j": ["terminal::SendKeystroke", "ctrl-j"],
       "ctrl-k": ["terminal::SendKeystroke", "ctrl-k"],
