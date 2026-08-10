@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply Niri session settings
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/gsettings set org.gnome.desktop.interface cursor-theme BreezeX-RosePine-Linux
+
+[Install]
+WantedBy=graphical-session.target

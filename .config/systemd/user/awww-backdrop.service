@@ -1,0 +1,12 @@
+[Unit]
+Description=AWWW overview backdrop daemon
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/awww-daemon --namespace backdrop
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

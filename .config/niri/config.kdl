@@ -27,6 +27,9 @@ input {
     //warp-mouse-to-focus
 }
 
+// This state file is maintained by niri-battery-animations.service.
+include "~/.local/state/niri/animations.kdl"
+
 // niri-monitor-preset:start
 output "DP-1" {
     mode "2560x1440@165"
@@ -93,48 +96,21 @@ layout {
     }
 }
 
-spawn-at-startup "~/.local/bin/tmux-sync-env"
-spawn-at-startup "systemctl" "--user" "restart" "tmux.service"
-spawn-at-startup "xwayland-satellite"
-spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "cursor-theme" "BreezeX-RosePine-Linux"
-spawn-at-startup "awww-daemon"
-spawn-at-startup "dunst"
 layer-rule {
-    match namespace="^awww-daemon$"
+    match namespace="^awww-daemonbackdrop$"
     place-within-backdrop true
 }
 layer-rule {
     match namespace="^swaync$"
     place-within-backdrop true
 }
-spawn-at-startup "sh" "-c" "exec \"$HOME/github/niri-wallpaper/build/niri-wallpaper\" \"$HOME/wallpapers/gleep\" -i 3600 -o eDP-1"
-spawn-at-startup "sh" "-c" "exec \"$HOME/github/niri-wallpaper/build/niri-wallpaper\" \"$HOME/wallpapers/gleep\" -i 3600 -o DP-1"
+
+// Let Niri manage the XWayland helper instead of spawning it as a separate command.
+xwayland-satellite {}
 
 prefer-no-csd
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
-
-animations {
-    workspace-switch {
-        spring damping-ratio=1.0 stiffness=350 epsilon=0.0001
-    }
-
-    horizontal-view-movement {
-        spring damping-ratio=1.0 stiffness=400 epsilon=0.0001
-    }
-
-    window-movement {
-        spring damping-ratio=1.0 stiffness=400 epsilon=0.0001
-    }
-
-    window-resize {
-        spring damping-ratio=1.0 stiffness=400 epsilon=0.0001
-    }
-
-    overview-open-close {
-        spring damping-ratio=1.0 stiffness=400 epsilon=0.0001
-    }
-}
 
 window-rule {
     geometry-corner-radius 12
@@ -270,6 +246,8 @@ binds {
 
     Mod+B { spawn "pkill" "-SIGUSR1" "waybar"; }
     Mod+W { spawn "pkill" "-SIGUSR2" "waybar"; }
+    Mod+Shift+B hotkey-overlay-title="Battery Wallpaper: Black" { spawn-sh "awww img 0x000000ff && awww img --namespace backdrop 0x000000ff"; }
+    Mod+Shift+Alt+B hotkey-overlay-title="Battery Wallpaper: Restore" { spawn-sh "awww img /home/veya/wallpapers/gleep/ermmies.png && awww img --namespace backdrop /home/veya/wallpapers/gleep/ermmies-blurred.png"; }
     Mod+U { spawn "wooz" "--mouse-track" ; }
 
     Mod+V { spawn "vicinae" "vicinae://launch/clipboard/history"; }

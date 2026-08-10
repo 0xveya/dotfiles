@@ -1,0 +1,14 @@
+[Unit]
+Description=Set Niri workspace and overview wallpapers
+Requires=awww-daemon.service awww-backdrop.service
+After=awww-daemon.service awww-backdrop.service
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/awww img %h/wallpapers/gleep/ermmies.png
+ExecStart=/usr/bin/awww img --namespace backdrop %h/wallpapers/gleep/ermmies-blurred.png
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical-session.target

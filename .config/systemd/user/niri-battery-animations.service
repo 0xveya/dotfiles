@@ -1,0 +1,12 @@
+[Unit]
+Description=Disable Niri animations while the laptop is discharging
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=/bin/sh %h/dotfiles/.local/bin/niri-battery-animations
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

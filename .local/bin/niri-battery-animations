@@ -1,0 +1,29 @@
+#!/bin/sh
+
+state_file="$HOME/.local/state/niri/animations.kdl"
+battery_device="/org/freedesktop/UPower/devices/DisplayDevice"
+
+write_state() {
+    if upower -i "$battery_device" | grep -q 'state:.*discharging'; then
+        next_state='animations {
+    off
+}'
+    else
+        next_state='animations {
+    workspace-switch { spring damping-ratio=1.0 stiffness=350 epsilon=0.0001 }
+    horizontal-view-movement { spring damping-ratio=1.0 stiffness=400 epsilon=0.0001 }
+    window-movement { spring damping-ratio=1.0 stiffness=400 epsilon=0.0001 }
+    window-resize { spring damping-ratio=1.0 stiffness=400 epsilon=0.0001 }
+    overview-open-close { spring damping-ratio=1.0 stiffness=400 epsilon=0.0001 }
+}'
+    fi
+
+    printf '%s\n' "$next_state" > "$state_file.tmp"
+    cmp -s "$state_file.tmp" "$state_file" || mv "$state_file.tmp" "$state_file"
+    rm -f "$state_file.tmp"
+}
+
+write_state
+upower --monitor-detail | while IFS= read -r _; do
+    write_state
+done
