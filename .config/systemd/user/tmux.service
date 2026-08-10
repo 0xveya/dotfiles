@@ -6,8 +6,8 @@ PartOf=graphical-session.target
 
 [Service]
 Type=forking
-ExecStartPre=%h/.local/bin/tmux-sync-env
 ExecStart=/usr/bin/tmux new-session -d
+ExecStartPost=%h/.local/bin/tmux-sync-env
 ExecStop=/usr/bin/tmux kill-server
 KillMode=control-group
 Restart=on-failure

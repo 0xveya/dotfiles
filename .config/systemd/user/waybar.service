@@ -1,6 +1,8 @@
 [Unit]
 Description=Waybar
-After=graphical-session-pre.target
+# Niri exports the Wayland session environment as it becomes ready.  Starting
+# before it races that export and makes Waybar fail with an empty display.
+After=niri.service
 PartOf=graphical-session.target
 
 [Service]

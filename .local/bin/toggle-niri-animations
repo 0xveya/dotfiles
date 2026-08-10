@@ -1,0 +1,21 @@
+#!/bin/sh
+
+override_file="$HOME/.config/niri/animations-override.kdl"
+temporary_file="$override_file.tmp"
+
+if grep -q '^\s*off\s*$' "$override_file" 2>/dev/null; then
+    printf '%s\n' \
+        '// Managed by ~/.local/bin/toggle-niri-animations.' \
+        '// Leave this file without an animations block to use the battery-managed settings.' \
+        > "$temporary_file"
+else
+    printf '%s\n' \
+        '// Managed by ~/.local/bin/toggle-niri-animations.' \
+        'animations {' \
+        '    off' \
+        '}' \
+        > "$temporary_file"
+fi
+
+mv "$temporary_file" "$override_file"
+niri msg action load-config-file
