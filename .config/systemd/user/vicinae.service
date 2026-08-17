@@ -8,11 +8,11 @@ PartOf=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=vicinae server --replace
+ExecStart=/home/veya/.local/bin/vicinae-server-patched
 ExecReload=/bin/kill -HUP $MAINPID
-Restart=always
+Restart=on-failure
 RestartSec=60
-KillMode=process
+KillMode=control-group
 
 [Install]
 WantedBy=graphical-session.target

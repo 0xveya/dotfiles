@@ -6,10 +6,8 @@ PartOf=graphical-session.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/blueman-applet
-Restart=always
+Restart=on-failure
 RestartSec=2
-Environment=DISPLAY=:0
-Environment=WAYLAND_DISPLAY=wayland-0
 
 [Install]
 WantedBy=graphical-session.target

@@ -103,6 +103,9 @@ alias uselesspkgs = sudo pacman -Rns ...(^pacman -Qqdt | lines)
 # source ~/.config/nushell/catppuccin_macchiato.nu
 
 
+alias glerm = gleam
+alias gleep = gleam
+
 alias owo = sudo
 alias uwu = sudo
 alias pwease = sudo
