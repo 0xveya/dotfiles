@@ -1,0 +1,44 @@
+[tools.uv]
+warm_for = "10m"
+
+[default.runtime]
+backend = "sandbox"
+
+[projects."/home/veya/coding/42".runtime]
+backend = "sandbox"
+
+[projects."/home/veya/coding/experiments".runtime]
+backend = "sandbox"
+
+[[projects."/home/veya/coding/experiments".mounts]]
+source = "/home/veya/erm/test.py"
+target = "/home/veya/erm/test.py"
+read_only = true
+
+[projects."/home/veya/coding/experiments".shell]
+wrap = ["go", "bun", "bunx", "uv", "uvx"]
+
+[projects."/home/veya/coding/42/cc/pac-man"]
+gui = true
+
+[projects."/home/veya/coding/42/cc/pac-man".runtime]
+backend = "sandbox"
+
+[projects."/home/veya/coding/42/cc/pac-man".shell]
+# wrap = ["go", "bun", "bunx", "uv", "uvx"]
+wrap = ["go"]
+
+[projects."/home/veya/coding/42/cc/rag-against-the-machine".runtime]
+backend = "sandbox"
+
+[projects."/home/veya/coding/42/cc/rag-against-the-machine".shell]
+wrap = ["go", "bun", "bunx", "uv", "uvx"]
+
+[projects."/home/veya/coding/shitnet".runtime]
+backend = "sandbox"
+
+[projects."/home/veya/coding/sme".runtime]
+backend = "sandbox"
+
+[projects."/home/veya/coding/sme-ci-simplify".runtime]
+backend = "sandbox"

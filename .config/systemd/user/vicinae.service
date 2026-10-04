@@ -8,7 +8,7 @@ PartOf=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/home/veya/.local/bin/vicinae-server-patched
+ExecStart=/usr/bin/vicinae server --replace
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartSec=60

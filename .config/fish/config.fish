@@ -60,6 +60,10 @@ if status is-interactive
 end
 set -gx PATH $HOME/.local/funcheck/host $PATH
 
+if test -d /usr/lib/emscripten
+    fish_add_path --path /usr/lib/emscripten
+end
+
 alias gbuild="mise run build-cli && grefresh"
 abbr -a gdev "./dist/gns3util"
 
