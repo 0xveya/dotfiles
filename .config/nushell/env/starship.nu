@@ -1,14 +1,13 @@
-export const STARSHIP_INIT_PATH = ($nu.cache-dir | path join starship init.nu)
+use cache.nu save-init
+
+export const STARSHIP_INIT_PATH = ($nu.data-dir | path join vendor autoload starship.nu)
+
+export const STARSHIP_COMPLETIONS_PATH = ($nu.cache-dir | path join starship completions.nu)
 
 export def init-starship [] {
-	mkdir ($STARSHIP_INIT_PATH | path dirname)
-	starship init nu | save -f $STARSHIP_INIT_PATH
+    save-init $STARSHIP_INIT_PATH (^starship init nu | complete)
 }
 
 export def gen-completions-starship [] {
-	starship completions nushell o> ([
-		$nu.default-config-dir
-		'autoload'
-		'starship-completions.nu'
-	] | path join)
+    save-init $STARSHIP_COMPLETIONS_PATH (^starship completions nushell | complete)
 }

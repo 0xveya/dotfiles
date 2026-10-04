@@ -1,6 +1,5 @@
 $env.PATH = [
-    ($env.HOME | path join ".local/share/mise/installs/television/0.15.4/tv-0.15.4-x86_64-unknown-linux-musl")
-    ($env.HOME | path join ".local/share/mise/installs/yq/4.52.4")
+    ($env.HOME | path join ".local/share/mise/shims")
     ($env.HOME | path join ".bun/bin")
     ($env.HOME | path join ".cache/.bun/bin")
     ($env.HOME | path join ".dotnet/tools")
@@ -16,5 +15,5 @@ $env.PATH = [
     "/usr/bin/core_perl"
     "/usr/lib/rustup/bin"
     ($env.HOME | path join ".local/funcheck/host")
-]
+] | append $env.PATH | uniq
 

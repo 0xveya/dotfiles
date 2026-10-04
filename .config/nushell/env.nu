@@ -6,8 +6,8 @@ $env.INFISICAL_API_URL = "https://secrets.saygex.xyz"
 export const ENV_DIR = path self './env/mod.nu'
 
 $env.PATH = [
-    ($env.HOME | path join ".local/share/mise/installs/television/0.15.4/tv-0.15.4-x86_64-unknown-linux-musl")
-    ($env.HOME | path join ".local/share/mise/installs/yq/4.52.4")
+    ($env.HOME | path join ".local/share/mise/shims")
+    "/usr/lib/emscripten"
     ($env.HOME | path join ".bun/bin")
     ($env.HOME | path join ".cache/.bun/bin")
     ($env.HOME | path join ".dotnet/tools")
@@ -23,7 +23,7 @@ $env.PATH = [
     "/usr/bin/core_perl"
     "/usr/lib/rustup/bin"
     ($env.HOME | path join ".local/funcheck/host")
-]
+] | append $env.PATH | uniq
 
 let init_jobs = [
 	{
@@ -51,11 +51,12 @@ let init_jobs = [
 		gen-completions-starship
 	}
 ]
-$init_jobs
-  | par-each --threads ($init_jobs | length) { try { do $in } catch { {} } }
-  | reduce --fold {} {|env_vars, acc| $acc | merge $env_vars }
-  | reject --optional PWD
-  | load-env
+for init in $init_jobs {
+    let env_vars = (do $init)
+    if $env_vars != null {
+        $env_vars | reject --optional PWD | load-env
+    }
+}
 
 
 let systemd_sock = $"($env.XDG_RUNTIME_DIR)/ssh-agent.socket"

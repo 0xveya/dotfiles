@@ -16,30 +16,30 @@ let carapace_completer = {|spans|
     CARAPACE_LENIENT=1 ^carapace $spans.0 nushell ...$spans | from json
 }
 
-let external_completer = {|spans|
-    let expanded_alias = scope aliases
-    | where name == $spans.0
-    | get -o 0.expansion
-
-    let spans = if $expanded_alias != null {
-        $spans
-        | skip 1
-        | prepend ($expanded_alias | split row ' ' | take 1)
+let xmake_completer = {|spans|
+    let result = (XMAKE_SKIP_HISTORY=1 XMAKE_COLORTERM=nocolor
+        ^xmake lua private.utils.complete 0 nospace ($spans | str join ' ') | complete)
+    if $result.exit_code == 0 {
+        $result.stdout | lines | where {|value| $value | is-not-empty}
     } else {
-        $spans
+        []
     }
+}
 
+let external_completer = {|place: record|
+    let spans = $place.command
     match $spans.0 {
         nu => $fish_completer
         git => $fish_completer
         asdf => $fish_completer
         mise => $fish_completer
+        xmake => $xmake_completer
         _ => $carapace_completer
     } | do $in $spans
 }
 
 
-$env.config = {
+$env.config = ($env.config | merge {
     show_banner: false
     edit_mode: vi
     buffer_editor: "nvim"
@@ -85,9 +85,10 @@ $env.config = {
             }
         }
     ]
-}
+})
 
 $env.config.shell_integration.osc133 = false
+$env.config.shell_integration.osc9_9 = true
 
 alias clock = tty-clock -sc
 alias v = nvim
@@ -220,27 +221,28 @@ use $ENV_DIR atuin ATUIN_INIT_PATH
 source $ATUIN_INIT_PATH
 hide ATUIN_INIT_PATH
 
-use $ENV_DIR carapace CARAPACE_INIT_PATH
-source $CARAPACE_INIT_PATH
-hide CARAPACE_INIT_PATH
-
 use $ENV_DIR zoxide ZOXIDE_INIT_PATH
 source $ZOXIDE_INIT_PATH
 hide ZOXIDE_INIT_PATH
 
-use $ENV_DIR starship STARSHIP_INIT_PATH
-use $STARSHIP_INIT_PATH
-hide STARSHIP_INIT_PATH
+use $ENV_DIR starship STARSHIP_COMPLETIONS_PATH
+source $STARSHIP_COMPLETIONS_PATH
+hide STARSHIP_COMPLETIONS_PATH
 
 use $ENV_DIR mise MISE_INIT_PATH
 use $MISE_INIT_PATH
 hide MISE_INIT_PATH
 
-let old_prompt = $env.PROMPT_COMMAND
-$env.PROMPT_COMMAND = {
-  print --no-newline $'(ansi esc)]9;9;('.' | path expand)(ansi esc)\'
-  do $old_prompt
+if ("/usr/lib/emscripten" | path exists) {
+    $env.PATH = (
+        $env.PATH
+        | each {|entry| $entry | into string | split row (char esep) }
+        | flatten
+        | prepend "/usr/lib/emscripten"
+        | uniq
+    )
 }
+
 $env.PROMPT_INDICATOR_VI_INSERT = { "" }
 
 def _hist_search [] {
@@ -248,7 +250,7 @@ def _hist_search [] {
         ^/home/veya/coding/nushell_hist_thing/target/debug/nushell_hist_thing
             --db ~/dotfiles/.config/nushell/history.sqlite3
             --session (history session)
-            --forward-format "am i a good girl? >w<"c:w
+            --forward-format "am i a good girl? >w<"
             --backward-format "i am a bottom >w<"
         e>| str trim
     )
@@ -259,7 +261,9 @@ def _hist_search [] {
     }
 }
 
-$env.config.keybindings = ($env.config.keybindings | append [
+$env.config.keybindings = ($env.config.keybindings
+    | where {|binding| $binding.name not-in [accept_autosuggestion atuin_history sigma_history_search]}
+    | append [
     {
         name: accept_autosuggestion
         modifier: alt
@@ -284,7 +288,7 @@ $env.config.keybindings = ($env.config.keybindings | append [
 ])
 
 def tmux-fix-gui-env [] {
-    load-env {
+    let gui_env = {
         DISPLAY: ":0"
         WAYLAND_DISPLAY: "wayland-1"
         DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
@@ -293,6 +297,10 @@ def tmux-fix-gui-env [] {
         XDG_RUNTIME_DIR: "/run/user/1000"
         XDG_SESSION_DESKTOP: "niri"
         XDG_SESSION_TYPE: "wayland"
+    }
+    load-env $gui_env
+    $gui_env | columns | each {|name|
+        tmux set-environment -g $name ($gui_env | get $name)
     }
 }
 
